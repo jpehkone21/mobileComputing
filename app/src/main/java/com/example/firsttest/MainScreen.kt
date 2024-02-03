@@ -1,6 +1,9 @@
 package com.example.firsttest
 
 import android.content.res.Configuration
+import android.net.Uri
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -22,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,14 +35,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.firsttest.ui.theme.FirstTestTheme
 
 data class Message(val author: String, val body: String)
 
 @Composable
 fun MainScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: ProfileViewModel
 ){
+    var username: String by remember { mutableStateOf("default") }
+    var profilePhoto: String by remember { mutableStateOf("") }
+    val userInfo = viewModel.getInfo(1)
+
+
+    username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
+
+    profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
+
 
     Column(modifier = Modifier.padding(all = 8.dp)){
         Button(onClick ={
@@ -46,15 +61,27 @@ fun MainScreen(
         }){
             Text("Settings")
         }
-        Conversation(SampleData.conversationSample)
+        Conversation(SampleData.conversationSample, username, profilePhoto)
+
     }
 
 }
 
 
 @Composable
-fun MessageCard(msg: Message) {
+fun MessageCard(msg: Message, username: String, photo: String) {
     Row(modifier = Modifier.padding(all = 8.dp)) {
+
+        AsyncImage(
+            model = photo,
+            placeholder = painterResource(R.drawable.kissa),
+            contentDescription = "profile picture",
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+
+        )/*
         Image(
             painter = painterResource(R.drawable.kissa),
             contentDescription = "Contact profile picture",
@@ -62,7 +89,7 @@ fun MessageCard(msg: Message) {
                 .size(40.dp)
                 .clip(CircleShape)
                 .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
+        )*/
         Spacer(modifier = Modifier.width(8.dp))
 
         var isExpanded by remember { mutableStateOf(false) }
@@ -73,7 +100,7 @@ fun MessageCard(msg: Message) {
 
         Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
             Text(
-                text = msg.author,
+                text = username,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleSmall
             )
@@ -96,42 +123,44 @@ fun MessageCard(msg: Message) {
         }
     }
 }
-
+/*
 @Preview(name = "Light Mode")
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
     name = "Dark Mode"
 )
+
 @Composable
 fun PreviewMessageCard(){
     FirstTestTheme {
         Surface {
             MessageCard(
-                msg = Message("Lexi", "Hey, this is a message!")
+                msg = Message("Lexi", "Hey, this is a message!"),
+                username = "username"
             )
         }
     }
 
 }
-
+*/
 @Composable
-fun Conversation(messages: List<Message>){
+fun Conversation(messages: List<Message>, username: String, photo: String){
     LazyColumn {
         items(messages) { message ->
-            MessageCard(message)
+            MessageCard(message, username, photo)
         }
     }
 }
-
+/*
 @Preview
 @Composable
 fun PreviewConversation(){
     FirstTestTheme {
-        Conversation(SampleData.conversationSample)
+        Conversation(SampleData.conversationSample, "username", )
     }
 }
-
+*/
 /**
  * SampleData for Jetpack Compose Tutorial
  */

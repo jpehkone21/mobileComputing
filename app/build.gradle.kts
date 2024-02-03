@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -65,4 +66,31 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
+
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    //
+    //Coroutines
+    api ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    api ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+//Lifecycle Components
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+    implementation ("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation ("androidx.lifecycle:lifecycle-common-java8:2.2.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+//Annotation processor
+    kapt ("androidx.lifecycle:lifecycle-compiler:2.2.0")
+//Room
+    implementation ("androidx.room:room-runtime:2.2.5")
+    kapt ("androidx.room:room-compiler:2.2.5")
+    implementation ("androidx.room:room-ktx:2.2.5")
+
 }
