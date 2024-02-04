@@ -26,8 +26,11 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.room.Room
@@ -44,24 +47,34 @@ fun SettingScreen(
 ){
     //val username: String = viewModel.getUsername()
     //val profilePhoto: String = viewModel.getPhoto()
-    var username: String by remember { mutableStateOf("default") }
+
+    var username by remember { mutableStateOf("default") }
     var profilePhoto: String by remember { mutableStateOf("") }
     val userInfo = viewModel.getInfo(1)
 
     username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
-
+    //var usernameTextField by remember { mutableStateOf(TextFieldValue(username))}
     profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
-    var newUsername by remember { mutableStateOf(username) }
+    //var newUsername by remember { mutableStateOf(username) }
 
     var selectedImageUri by remember{
+        mutableStateOf<String>(profilePhoto)
+    }
+    var selectedImageUri2 by remember{
         mutableStateOf<Uri?>(null)
     }
 
-    
+    val context = LocalContext.current
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {uri -> selectedImageUri = uri }
+        onResult = { uri ->
+            selectedImageUri = uri.toString()
+
+            //profilePhoto = selectedImageUri
+            viewModel.addInfo(ProfileInfo( 1, selectedImageUri, username))
+            //username = newUsername
+        }
     )
 
 
@@ -112,8 +125,8 @@ fun SettingScreen(
             )
         }else{*/
             AsyncImage(
-                model = selectedImageUri,
-                placeholder = painterResource(R.drawable.kissa),
+                model = profilePhoto,
+                //placeholder = painterResource(R.drawable.kissa),
                 contentDescription = "profile picture",
                 modifier = Modifier
                     .size(80.dp)
@@ -123,6 +136,8 @@ fun SettingScreen(
                         pickMedia.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
+
+                        //profilePhoto = selectedImageUri
                     }
             )
         //}
@@ -130,19 +145,23 @@ fun SettingScreen(
 
 
         OutlinedTextField(
-            value = newUsername,
-            onValueChange = { newUsername = it },
+            value = username,
+            onValueChange = {
+                //username = it
+                viewModel.addInfo(ProfileInfo( 1, selectedImageUri, it))
+                            //username = newUsername.toString()
+            },
             label = { Text("Username") }
-        )
+        )/*
         Button(
             onClick = {
                 //if (viewModel.getItemCount() <= 0){
                  //   viewModel.insertUser(ProfileInfo(0, selectedImageUri.toString(), newUsername))
                // }else {
                     //if (newUsername.isNotBlank()) {
-                        viewModel.addInfo(ProfileInfo( 1, selectedImageUri.toString(), newUsername))
-                        username = newUsername
-                        profilePhoto = selectedImageUri.toString()
+                        viewModel.addInfo(ProfileInfo( 1, selectedImageUri, username))
+                        //usernameTextField = username
+                        //profilePhoto = selectedImageUri
 
             //viewModel.updateUsername(newUsername)
 
@@ -154,7 +173,7 @@ fun SettingScreen(
         ) {
             Text("save changes")
         }
-
+*/
     }
 
 

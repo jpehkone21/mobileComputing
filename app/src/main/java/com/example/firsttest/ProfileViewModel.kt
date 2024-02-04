@@ -1,6 +1,8 @@
 package com.example.firsttest
 
 import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -17,6 +19,9 @@ class ProfileViewModel(
         val profileInfoDB = ProfileInfoDatabase.getDatabase(application).dao()
         repository = ProfileInfoRepository(profileInfoDB)
         readAll = repository.getAll()
+
+
+
     }
     fun addInfo(info: ProfileInfo){
         viewModelScope.launch (Dispatchers.IO){

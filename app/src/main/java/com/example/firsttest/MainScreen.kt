@@ -49,9 +49,8 @@ fun MainScreen(
     var profilePhoto: String by remember { mutableStateOf("") }
     val userInfo = viewModel.getInfo(1)
 
-
+    //viewModel.addInfo(ProfileInfo( 1, "", "default"))
     username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
-
     profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
 
