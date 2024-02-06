@@ -93,4 +93,12 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.2.5")
     implementation ("androidx.room:room-ktx:2.2.5")
 
+    val work_version = "2.9.0"
+
+    // (Java only)
+    implementation("androidx.work:work-runtime:$work_version")
+
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
 }

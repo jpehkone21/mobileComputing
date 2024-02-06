@@ -9,7 +9,14 @@ class ProfileInfoRepository(
 ) {
     suspend fun insertUser(user: ProfileInfo){
         dao.insertUser(user)
-    }/*
+    }
+    fun isEmpty(): Boolean {
+        return dao.isEmpty() == 0 // Add a method in your DAO to check if the database is empty
+    }
+    fun insertInitialItem(item: ProfileInfo){
+        dao.insertInitialItem(item)
+    }
+    /*
     fun getUsername(): String {
         return dao.getUsername()
     }

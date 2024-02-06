@@ -13,6 +13,11 @@ import androidx.room.Upsert
 interface ProfileInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: ProfileInfo)
+
+    @Query("SELECT COUNT(*) FROM ProfileInfo")
+    fun isEmpty(): Int
+    @Insert
+    fun insertInitialItem(item: ProfileInfo)
     /*
     @Update
     fun updatePhoto(newPhotoUri: String)

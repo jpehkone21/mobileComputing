@@ -9,21 +9,26 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun Navigation(
     viewModel: ProfileViewModel
-){
+) {
+    //if (viewModel.isEmpty()) {
+        //viewModel.addInfo(ProfileInfo(1, "", "kissa"))
+    //}
     val navController = rememberNavController()
     //viewModel.insertUser(ProfileInfo( 0, Uri.parse("https://example.com/image.jpg"), "nimi"))
 
     NavHost(
         navController = navController,
         startDestination = Screen.MainScreen.route
-    ){
+    ) {
         composable(
-            route = Screen.MainScreen.route){
-                MainScreen(navController, viewModel)
+            route = Screen.MainScreen.route
+        ) {
+            MainScreen(navController, viewModel)
         }
         composable(
-            route = Screen.SettingScreen.route){
-                SettingScreen(navController, viewModel)
+            route = Screen.SettingScreen.route
+        ) {
+            SettingScreen(navController, viewModel)
         }
     }
 }

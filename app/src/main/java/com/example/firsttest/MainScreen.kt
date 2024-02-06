@@ -1,6 +1,7 @@
 package com.example.firsttest
 
 import android.content.res.Configuration
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,18 +26,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.firsttest.ui.theme.FirstTestTheme
+import java.io.FileNotFoundException
 
 data class Message(val author: String, val body: String)
 
@@ -48,11 +55,25 @@ fun MainScreen(
     var username: String by remember { mutableStateOf("default") }
     var profilePhoto: String by remember { mutableStateOf("") }
     val userInfo = viewModel.getInfo(1)
-
+    val context = LocalContext.current
+    val filename = "myfile"
     //viewModel.addInfo(ProfileInfo( 1, "", "default"))
     username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
     profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
+/*
+    val resolver = context.contentResolver
+
+    resolver.openInputStream(profilePhoto.toUri()).use { stream ->
+        // Perform operations on "stream".
+        profilePhoto = stream.toString()
+    }
+*/
+
+       //var stream = context.openFileInput(filename)
+
+    //val bitmap = BitmapFactory.decodeStream(stream)
+    //val profilePhoto: ImageBitmap? = bitmap?.asImageBitmap()
 
     Column(modifier = Modifier.padding(all = 8.dp)){
         Button(onClick ={
@@ -73,7 +94,7 @@ fun MessageCard(msg: Message, username: String, photo: String) {
 
         AsyncImage(
             model = photo,
-            placeholder = painterResource(R.drawable.kissa),
+            //placeholder = painterResource(R.drawable.kissa),
             contentDescription = "profile picture",
             modifier = Modifier
                 .size(40.dp)

@@ -1,5 +1,6 @@
 package com.example.firsttest
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,9 +36,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.room.Room
 import coil.compose.AsyncImage
-
-
-
+import java.util.UUID
 
 
 @Composable
@@ -56,6 +55,10 @@ fun SettingScreen(
     //var usernameTextField by remember { mutableStateOf(TextFieldValue(username))}
     profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
+    var filename = "profilePic.jpg"
+
+    //var numero = viewModel.getAll().observeAsState().value?.size
+
     //var newUsername by remember { mutableStateOf(username) }
 
     var selectedImageUri by remember{
@@ -64,21 +67,51 @@ fun SettingScreen(
     var selectedImageUri2 by remember{
         mutableStateOf<Uri?>(null)
     }
+    var imageFilePath by remember {
+        mutableStateOf<String>(profilePhoto)
+    }
 
     val context = LocalContext.current
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            selectedImageUri = uri.toString()
+        onResult = { newUri: Uri? ->
+            selectedImageUri = newUri.toString()
+            selectedImageUri2 = newUri
 
             //profilePhoto = selectedImageUri
-            viewModel.addInfo(ProfileInfo( 1, selectedImageUri, username))
+
             //username = newUsername
+
+
+            //val resolver =
+            selectedImageUri2?.let {
+                if (newUri != null) {
+                    if(selectedImageUri != profilePhoto){
+                        filename = UUID.randomUUID().toString()
+                    }
+                    //resolver.use { stream ->
+                        // Perform operations on "stream".
+
+                        val fileContents = selectedImageUri2
+                        val inputstream = context.contentResolver.openInputStream(newUri)
+                        val outputFile = context.filesDir.resolve(filename)
+                        inputstream?.copyTo(outputFile.outputStream())
+                        imageFilePath = outputFile.toString()
+                        viewModel.addInfo(ProfileInfo( 1, imageFilePath, username))
+
+
+
+                    //}
+                }
+            }
         }
     )
-
-
-
+/*
+    context.openFileInput(filename).bufferedReader().useLines { lines ->
+        lines.fold("") { some, text ->
+            "$some\n$text"
+        }
+    }*/
 
     Column() {
 
@@ -148,7 +181,7 @@ fun SettingScreen(
             value = username,
             onValueChange = {
                 //username = it
-                viewModel.addInfo(ProfileInfo( 1, selectedImageUri, it))
+                viewModel.addInfo(ProfileInfo( 1, imageFilePath, it))
                             //username = newUsername.toString()
             },
             label = { Text("Username") }
@@ -159,7 +192,7 @@ fun SettingScreen(
                  //   viewModel.insertUser(ProfileInfo(0, selectedImageUri.toString(), newUsername))
                // }else {
                     //if (newUsername.isNotBlank()) {
-                        viewModel.addInfo(ProfileInfo( 1, selectedImageUri, username))
+                        viewModel.addInfo(ProfileInfo( 1, imageFilePath, username))
                         //usernameTextField = username
                         //profilePhoto = selectedImageUri
 
@@ -172,8 +205,8 @@ fun SettingScreen(
             }
         ) {
             Text("save changes")
-        }
-*/
+        }*/
+
     }
 
 
