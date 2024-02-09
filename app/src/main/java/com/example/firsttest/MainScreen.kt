@@ -52,28 +52,15 @@ fun MainScreen(
     navController: NavController,
     viewModel: ProfileViewModel
 ){
-    var username: String by remember { mutableStateOf("default") }
-    var profilePhoto: String by remember { mutableStateOf("") }
+
     val userInfo = viewModel.getInfo(1)
     val context = LocalContext.current
     val filename = "myfile"
-    //viewModel.addInfo(ProfileInfo( 1, "", "default"))
-    username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
-    profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
-/*
-    val resolver = context.contentResolver
+    var username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
+    var profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
-    resolver.openInputStream(profilePhoto.toUri()).use { stream ->
-        // Perform operations on "stream".
-        profilePhoto = stream.toString()
-    }
-*/
 
-       //var stream = context.openFileInput(filename)
-
-    //val bitmap = BitmapFactory.decodeStream(stream)
-    //val profilePhoto: ImageBitmap? = bitmap?.asImageBitmap()
 
     Column(modifier = Modifier.padding(all = 8.dp)){
         Button(onClick ={

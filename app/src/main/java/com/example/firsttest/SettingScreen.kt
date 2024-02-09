@@ -44,22 +44,16 @@ fun SettingScreen(
     navController: NavController,
     viewModel: ProfileViewModel
 ){
-    //val username: String = viewModel.getUsername()
-    //val profilePhoto: String = viewModel.getPhoto()
 
-    var username by remember { mutableStateOf("default") }
-    var profilePhoto: String by remember { mutableStateOf("") }
     val userInfo = viewModel.getInfo(1)
 
-    username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
+    var username = (userInfo.observeAsState().value?.get(0)?.username.toString() )
     //var usernameTextField by remember { mutableStateOf(TextFieldValue(username))}
-    profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
+    var profilePhoto = (userInfo.observeAsState().value?.get(0)?.photoUri.toString())
 
     var filename = "profilePic.jpg"
 
-    //var numero = viewModel.getAll().observeAsState().value?.size
 
-    //var newUsername by remember { mutableStateOf(username) }
 
     var selectedImageUri by remember{
         mutableStateOf<String>(profilePhoto)
@@ -78,19 +72,13 @@ fun SettingScreen(
             selectedImageUri = newUri.toString()
             selectedImageUri2 = newUri
 
-            //profilePhoto = selectedImageUri
 
-            //username = newUsername
-
-
-            //val resolver =
             selectedImageUri2?.let {
                 if (newUri != null) {
                     if(selectedImageUri != profilePhoto){
                         filename = UUID.randomUUID().toString()
                     }
-                    //resolver.use { stream ->
-                        // Perform operations on "stream".
+
 
                         val fileContents = selectedImageUri2
                         val inputstream = context.contentResolver.openInputStream(newUri)
@@ -106,12 +94,7 @@ fun SettingScreen(
             }
         }
     )
-/*
-    context.openFileInput(filename).bufferedReader().useLines { lines ->
-        lines.fold("") { some, text ->
-            "$some\n$text"
-        }
-    }*/
+
 
     Column() {
 
@@ -141,22 +124,7 @@ fun SettingScreen(
             text = "Change profile picture and username here.",
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.bodyMedium
-        )/*
-        if(selectedImageUri == null){
-            Image(
-                painter = painterResource(R.drawable.kissa),
-                contentDescription = "Contact profile picture",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                    .clickable {
-                        pickMedia.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }
-            )
-        }else{*/
+        )
             AsyncImage(
                 model = profilePhoto,
                 //placeholder = painterResource(R.drawable.kissa),

@@ -18,29 +18,11 @@ import androidx.room.Room
 class MainActivity : ComponentActivity() {
 
     private val viewModel: ProfileViewModel by viewModels()
-/*
-    private val db by lazy{
-        Room.databaseBuilder(
-        applicationContext,
-        ProfileInfoDatabase::class.java, "profileInfo.dp"
-    ).build()
-    }
 
-    private val viewModel by viewModels<ProfileViewModel>(
-        factoryProducer = {
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ProfileViewModel(db.dao) as T
-                }
-            }
-        }
-    )
-    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FirstTestTheme {
-                //viewModel.insertUser(ProfileInfo(0, , "jokunimi"))
 
                 Navigation(viewModel)
             }

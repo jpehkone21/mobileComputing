@@ -16,20 +16,10 @@ class ProfileViewModel(
     private val repository: ProfileInfoRepository
     private val readAll : LiveData<List<ProfileInfo>>
     init {
-        val profileInfoDB = ProfileInfoDatabase.getDatabase(application).dao()
+        val profileInfoDB = ProfileInfoDatabase.getInstance(application).dao()
         repository = ProfileInfoRepository(profileInfoDB)
         readAll = repository.getAll()
-    /*
-        //repository.insertInitialItem(ProfileInfo(1, "", "Matti"))
-        viewModelScope.launch{
-            if(repository.isEmpty()){
-                repository.insertUser(ProfileInfo(1, "", "Matti"))
-            }
-        }
-*/
-        //viewModelScope.launch (Dispatchers.IO) {
-            //
-        //}
+
 
 
     }
@@ -52,15 +42,7 @@ class ProfileViewModel(
         return repository.getAll()
     }
 
-    /*
-    fun getUsername(): String{
-             return repository.getUsername()
-    }
-    fun getPhoto(): String = repository.getPhoto()
 
-
-    fun getInfo():LiveData<List<ProfileInfo>> = repository.getAll()
-*/
 
 
 }

@@ -18,29 +18,13 @@ interface ProfileInfoDao {
     fun isEmpty(): Int
     @Insert
     fun insertInitialItem(item: ProfileInfo)
-    /*
-    @Update
-    fun updatePhoto(newPhotoUri: String)
-    @Update
-    fun updateUsername(username: String)
 
-
-    @Update
-    suspend fun updateInfo(newInfo: ProfileInfo)
-
-    @Query("SELECT photoUri FROM profileinfo WHERE id = 1")
-    fun getPhoto():String
-
-    @Query("SELECT username FROM profileinfo WHERE id = 1")
-    fun getUsername():String
-*/
     @Query("SELECT * FROM profileinfo")
     fun getAll(): LiveData<List<ProfileInfo>>
 
     @Query("SELECT * FROM profileinfo WHERE id= :id")
     fun getInfo(id: Long): LiveData<List<ProfileInfo>>
 
-    //@Query("SELECT COUNT(id) From profileinfo")
-    //fun getCount():Int
+
 
 }

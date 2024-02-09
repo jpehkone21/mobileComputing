@@ -20,23 +20,29 @@ abstract class ProfileInfoDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: ProfileInfoDatabase? = null
 
-        fun getDatabase(context: Context): ProfileInfoDatabase {
 
-            val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
-            }
-            synchronized(this){
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    ProfileInfoDatabase::class.java,
-                    "profileInfo.dp"
-                ).build()
 
-                    INSTANCE = instance
-                return instance
+
+        fun getInstance(context: Context): ProfileInfoDatabase =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
-        }
+
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(context.applicationContext,
+                ProfileInfoDatabase::class.java, "ProfileInfo.db")
+                .addCallback(object : Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+
+                        ioThread {
+                            getInstance(context).dao().insertInitialItem(ProfileInfo(1, " ", "default name"))
+                        }
+                    }
+                })
+                .build()
 
     }
+
+
 }
