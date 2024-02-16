@@ -100,5 +100,6 @@ dependencies {
 
     // Kotlin + coroutines
     implementation("androidx.work:work-runtime-ktx:$work_version")
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 
 }

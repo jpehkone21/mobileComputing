@@ -1,7 +1,15 @@
 package com.example.firsttest
 
+import android.Manifest
+import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -21,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,6 +40,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -95,6 +106,25 @@ fun SettingScreen(
         }
     )
 
+    var hasNotificationPermission by remember{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mutableStateOf(
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            )
+        } else {
+            mutableStateOf(true)
+        }
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = {isGranted ->
+            hasNotificationPermission = isGranted
+
+        }
+    )
 
     Column() {
 
@@ -121,7 +151,7 @@ fun SettingScreen(
         }
 
         Text(
-            text = "Change profile picture and username here.",
+            text = "Change profile picture and username here." ,
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -174,6 +204,23 @@ fun SettingScreen(
         ) {
             Text("save changes")
         }*/
+        if (!hasNotificationPermission){
+            Button(
+                onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+            ) {
+                Text("Allow notifications")
+            }
+        }else{
+            Text(
+                text = "Notifications allowed." ,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
     }
 
