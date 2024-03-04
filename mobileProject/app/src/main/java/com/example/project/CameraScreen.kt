@@ -47,7 +47,6 @@ fun CameraScreen(
     viewModel: MainViewModel
 ) {
     val context = LocalContext.current
-    //val viewModel = viewModel<MainViewModel>()
 
 
 
@@ -102,19 +101,7 @@ fun CameraScreen(
                         .align(Alignment.BottomCenter)
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceAround
-                ) {/*
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Photo,
-                            contentDescription = "Open gallery"
-                        )
-                    }*/
+                ) {
                     IconButton(
                         onClick = {
                             takePhoto(

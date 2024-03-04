@@ -34,13 +34,18 @@ fun MainScreen(
 
     val bitmaps by viewModel.bitmaps.collectAsState()
 
-    Column() {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+
 
 
         Button(onClick = {
             navController.navigate(route = Screen.CameraScreen.route)
-        }) {
+        }){
+
             Text("Open camera")
+
         }
         if (bitmaps.isEmpty()) {
             Box(
@@ -48,10 +53,11 @@ fun MainScreen(
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("There are no photos yet")
+                Text("No images yet")
             }
         } else {
             LazyVerticalStaggeredGrid(
+                //modifier = Modifier.padding(5.dp),
                 columns = StaggeredGridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalItemSpacing = 16.dp,
